@@ -1,5 +1,5 @@
 all: genome.fa reads-nobias.fa reads-bias-nonrandom.fa reads-bias-nonrandom.fa \
-	metag-reads.fa reads-bias-nonrandom.dens  reads-bias-random.dens  reads-nobias.dens reads-bias-random.r1.dens reads-bias-random.r3.dens reads-bias-random.r5.dens repreads-bias-random.dens
+	metag-reads.fa reads-bias-nonrandom.dens  reads-bias-random.dens  reads-nobias.dens reads-bias-random.r1.dens reads-bias-random.r3.dens reads-bias-random.r5.dens repreads-bias-random.dens ecoli-bias-random.dens ecoli-nobias.dens
 
 genome.fa:
 	python make-random-genome.py > genome.fa
@@ -18,6 +18,12 @@ repreads-bias-random.fa: repgenome.fa
 
 reads-bias-nonrandom.fa: genome.fa
 	python make-reads-biased-nonrandom.py genome.fa > reads-bias-nonrandom.fa
+
+ecoli-nobias.fa.gz: ecoliMG1655.fa
+	python make-reads.py ecoliMG1655.fa | gzip -9c > ecoli-nobias.fa.gz
+
+ecoli-bias-random.fa.gz: ecoliMG1655.fa
+	python make-reads-biased-random.py ecoliMG1655.fa | gzip -9c > ecoli-bias-random.fa.gz
 
 transcripts.fa:
 	python make-random-transcriptome.py > transcripts.fa
@@ -57,3 +63,15 @@ repreads-bias-random.ht: repreads-bias-random.fa
 
 repreads-bias-random.dens: repreads-bias-random.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 repreads-bias-random.ht repreads-bias-random.fa repreads-bias-random.dens
+
+ecoli-nobias.ht: ecoli-nobias.fa.gz
+	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 1e9 --no-build-tagset ecoli-nobias ecoli-nobias.fa.gz
+
+ecoli-nobias.dens: ecoli-nobias.ht
+	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 ecoli-nobias.ht ecoli-nobias.fa.gz ecoli-nobias.dens
+
+ecoli-bias-random.ht: ecoli-bias-random.fa.gz
+	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 1e9 --no-build-tagset ecoli-bias-random ecoli-bias-random.fa.gz
+
+ecoli-bias-random.dens: ecoli-bias-random.ht
+	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 ecoli-bias-random.ht ecoli-bias-random.fa.gz ecoli-bias-random.dens
