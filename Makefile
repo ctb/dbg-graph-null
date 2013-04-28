@@ -1,5 +1,15 @@
 all: genome.fa reads-nobias.fa reads-bias-nonrandom.fa reads-bias-nonrandom.fa \
-	metag-reads.fa reads-bias-nonrandom.dens  reads-bias-random.dens  reads-nobias.dens reads-bias-random.r1.dens reads-bias-random.r3.dens reads-bias-random.r5.dens repreads-bias-random.dens ecoli-bias-random.dens ecoli-nobias.dens
+	metag-reads.fa reads-bias-nonrandom.dens  reads-bias-random.dens  reads-nobias.dens reads-bias-random.r1.dens reads-bias-random.r3.dens reads-bias-random.r5.dens repreads-bias-random.dens ecoli-bias-random.dens ecoli-nobias.dens  reads-nobias.posdens65 \
+	reads-nobias.posdens10 \
+	reads-bias-random.posdens65 \
+	reads-bias-random.posdens10 \
+	reads-bias-nonrandom.posdens65 \
+	reads-bias-nonrandom.posdens10 \
+	repreads-bias-random.posdens65 \
+	repreads-bias-random.posdens10 \
+	corn-50m-lump.posdens40 \
+	corn-50m-lump.posdens10 \
+	corn-50m-lump.dens
 
 genome.fa:
 	python make-random-genome.py > genome.fa
@@ -37,11 +47,23 @@ reads-nobias.ht: reads-nobias.fa
 reads-nobias.dens: reads-nobias.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 reads-nobias.ht reads-nobias.fa reads-nobias.dens
 
+reads-nobias.posdens65: reads-nobias.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 65 -n 100000 reads-nobias.ht reads-nobias.fa reads-nobias.posdens65
+
+reads-nobias.posdens10: reads-nobias.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 reads-nobias.ht reads-nobias.fa reads-nobias.posdens10
+
 reads-bias-random.ht: reads-bias-random.fa
 	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 1e9 --no-build-tagset reads-bias-random reads-bias-random.fa
 
 reads-bias-random.dens: reads-bias-random.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 reads-bias-random.ht reads-bias-random.fa reads-bias-random.dens
+
+reads-bias-random.posdens65: reads-bias-random.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 65 -n 100000 reads-bias-random.ht reads-bias-random.fa reads-bias-random.posdens65
+
+reads-bias-random.posdens10: reads-bias-random.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 reads-bias-random.ht reads-bias-random.fa reads-bias-random.posdens10
 
 reads-bias-random.r1.dens: reads-bias-random.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -r 1 -n 10000 reads-bias-random.ht reads-bias-random.fa reads-bias-random.r1.dens
@@ -58,11 +80,29 @@ reads-bias-nonrandom.ht: reads-bias-nonrandom.fa
 reads-bias-nonrandom.dens: reads-bias-nonrandom.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 reads-bias-nonrandom.ht reads-bias-nonrandom.fa reads-bias-nonrandom.dens
 
+reads-bias-nonrandom.posdens65: reads-bias-nonrandom.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 65 -n 100000 reads-bias-nonrandom.ht reads-bias-nonrandom.fa reads-bias-nonrandom.posdens65
+
+reads-bias-nonrandom.posdens10: reads-bias-nonrandom.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 reads-bias-nonrandom.ht reads-bias-nonrandom.fa reads-bias-nonrandom.posdens10
+
+repreads-bias-nonrandom.posdens65: repreads-bias-nonrandom.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 65 -n 100000 repreads-bias-nonrandom.ht repreads-bias-nonrandom.fa repreads-bias-nonrandom.posdens65
+
+repreads-bias-nonrandom.posdens10: repreads-bias-nonrandom.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 repreads-bias-nonrandom.ht repreads-bias-nonrandom.fa repreads-bias-nonrandom.posdens10
+
 repreads-bias-random.ht: repreads-bias-random.fa
 	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 1e9 --no-build-tagset repreads-bias-random repreads-bias-random.fa
 
 repreads-bias-random.dens: repreads-bias-random.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 repreads-bias-random.ht repreads-bias-random.fa repreads-bias-random.dens
+
+repreads-bias-random.posdens65: repreads-bias-random.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 65 -n 100000 repreads-bias-random.ht repreads-bias-random.fa repreads-bias-random.posdens65
+
+repreads-bias-random.posdens10: repreads-bias-random.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 repreads-bias-random.ht repreads-bias-random.fa repreads-bias-random.posdens10
 
 ecoli-nobias.ht: ecoli-nobias.fa.gz
 	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 1e9 --no-build-tagset ecoli-nobias ecoli-nobias.fa.gz
@@ -75,3 +115,15 @@ ecoli-bias-random.ht: ecoli-bias-random.fa.gz
 
 ecoli-bias-random.dens: ecoli-bias-random.ht
 	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 ecoli-bias-random.ht ecoli-bias-random.fa.gz ecoli-bias-random.dens
+
+corn-50m-lump.ht: corn-50m-lump.fa.gz
+	python /u/t/dev/khmer/scripts/load-graph.py -k 32 -N 4 -x 4e9 --no-build-tagset corn-50m-lump corn-50m-lump.fa.gz
+
+corn-50m-lump.dens: corn-50m-lump.ht
+	python /u/t/dev/khmer/sandbox/count-density-by-position.py -n 10000 corn-50m-lump.ht corn-50m-lump.fa.gz corn-50m-lump.dens
+
+corn-50m-lump.posdens40: corn-50m-lump.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 40 -n 100000 corn-50m-lump.ht corn-50m-lump.fa.gz corn-50m-lump.posdens40
+
+corn-50m-lump.posdens10: corn-50m-lump.ht
+	python /u/t/dev/khmer/sandbox/count-density-at-position.py -P 10 -n 100000 corn-50m-lump.ht corn-50m-lump.fa.gz corn-50m-lump.posdens10
