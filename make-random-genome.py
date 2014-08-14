@@ -1,11 +1,19 @@
 #! /usr/bin/env python
 import random
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--length', type=int, default=100000)
+args = parser.parse_args()
+
+LENGTH = args.length
 
 random.seed(1)                  # make reproducible
 
 x = ["A"] + ["G"] + ["C"] + ["T"]
-x = x*100000
+x = x*LENGTH
 
 random.shuffle(x)
+x = x[:LENGTH]
 
-print '>repgenome\n%s\n' % "".join(x)
+print '>genome\n%s' % "".join(x)

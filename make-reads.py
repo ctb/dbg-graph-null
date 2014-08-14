@@ -3,14 +3,22 @@ import screed
 import sys
 import random
 import fasta
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-e', '--error-rate', type=int, default=100)
+parser.add_argument('-r', '--read-length', type=int, default=100)
+parser.add_argument('-C', '--coverage', type=int, default=50)
+parser.add_argument('genome')
+args = parser.parse_args()
 
 random.seed(1)                  # make this reproducible, please.
 
-COVERAGE=50
-READLEN=100
-ERROR_RATE=100
+COVERAGE=args.coverage
+READLEN=args.read_length
+ERROR_RATE=args.error_rate
 
-record = iter(screed.open(sys.argv[1])).next()
+record = iter(screed.open(args.genome)).next()
 genome = record.sequence
 len_genome = len(genome)
 
