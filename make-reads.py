@@ -6,7 +6,7 @@ import fasta
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-e', '--error-rate', type=int, default=100)
+parser.add_argument('-e', '--error-rate', type=float, default=.01)
 parser.add_argument('-r', '--read-length', type=int, default=100)
 parser.add_argument('-C', '--coverage', type=int, default=50)
 parser.add_argument('genome')
@@ -37,11 +37,12 @@ for i in range(n_reads):
     # error?
     was_mut = False
     for _ in range(READLEN):
-        while random.randint(1, ERROR_RATE) == 1:
-           pos = random.randint(1, READLEN) - 1
-           read = read[:pos] + random.choice(['a', 'c', 'g', 't']) + read[pos+1:]
-           was_mut = True
-           total_mut += 1
+        if ERROR_RATE > 0:
+            while random.randint(1, int(1.0/ERROR_RATE)) == 1:
+                pos = random.randint(1, READLEN) - 1
+                read = read[:pos] + random.choice(['a', 'c', 'g', 't']) + read[pos+1:]
+                was_mut = True
+                total_mut += 1
 
     if was_mut:
         reads_mut += 1
