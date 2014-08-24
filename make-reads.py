@@ -22,6 +22,11 @@ record = iter(screed.open(args.genome)).next()
 genome = record.sequence
 len_genome = len(genome)
 
+print >>sys.stderr, 'genome size:', len_genome
+print >>sys.stderr, 'coverage:', COVERAGE
+print >>sys.stderr, 'readlen:', READLEN
+print >>sys.stderr, 'error rate:', ERROR_RATE
+
 n_reads = int(len_genome*COVERAGE / float(READLEN))
 reads_mut = 0
 total_mut = 0
